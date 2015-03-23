@@ -3716,6 +3716,8 @@ mono_alloc_static_data (gpointer **static_data_ptr, guint32 offset)
 	gpointer* static_data = *static_data_ptr;
 	if (!static_data) {
 		static_data = mono_gc_alloc_fixed (static_data_size [0], NULL);
+		// BOSSFIGHT:
+		mono_profiler_thread_statics_allocation(static_data, static_data_size[0]);
 		*static_data_ptr = static_data;
 		static_data [0] = static_data;
 	}
@@ -3724,6 +3726,8 @@ mono_alloc_static_data (gpointer **static_data_ptr, guint32 offset)
 		if (static_data [i])
 			continue;
 		static_data [i] = mono_gc_alloc_fixed (static_data_size [i], NULL);
+		// BOSSFIGHT:
+		mono_profiler_thread_statics_allocation(static_data[i], static_data_size[i]);
 	}
 }
 
