@@ -39,7 +39,7 @@ void unity_mono_redirect_output( HANDLE handle )
 //	int fd_copy;
 	unity_log_output = handle;	
 	fd = _open_osfhandle((intptr_t)handle, (_O_APPEND | _O_TEXT));
-	stdout->_file = fd;
+	//stdout->_file = fd;
 	_dup2(fd,_fileno(stdout));
 	//*stdout = *_fdopen(fd, "at");
 	
@@ -107,7 +107,7 @@ void mono_unity_set_embeddinghostname(const char* name)
 	// Said func is invoked by Unity's call to mono_jit_init_version in InitializeMonoFromMain(...),
 	// but the call to this __func__ takes place only a few calls later (after mono_thread_set_main).
 	// I suppose this could also be called inside mono_thread_set_main...
-	heap_boss_startup("heap-boss");
+	//heap_boss_startup("heap-boss"); // NOTE: moved to mono_set_commandline_arguments
 }
 
 
@@ -154,6 +154,16 @@ void
 mono_unity_install_memory_callbacks (MonoMemoryCallbacks* callbacks)
 {
 	g_mem_set_callbacks (callbacks);
+}
+
+void mono_unity_thread_clear_domain_fields (void)
+{
+	/*
+	 we need to clear fields that may reference objects living in non-root appdomain
+	 since the objects will live but their vtables will be destroyed when domain is torn down.
+	 */
+	MonoThread* thread = mono_thread_current ();
+	thread->principal = NULL;
 }
 
 // classes_ref is a preallocated array of *length_ref MonoClass*
