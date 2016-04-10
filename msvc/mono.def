@@ -3,6 +3,11 @@ LIBRARY mono.dll
 EXPORTS
 ; BOSSFIGHT:
 heap_boss_handle_custom_event
+heap_boss_handle_app_resign_active
+heap_boss_handle_app_become_active
+heap_boss_handle_app_memory_warning
+heap_boss_handle_app_will_terminate
+heap_boss_handle_new_frame
 
 ;Unity Exports that expose private mono apis
 mono_thread_suspend_all_other_threads

@@ -490,15 +490,16 @@ void OutfileWriter::write_new_frame()
 	write_time_offset(this->out, timestamp);
 
 	total.frames_count++;
-	this->try_flush();
+	// intentionally not trying to flush here
+	//this->try_flush();
 }
 
 void OutfileWriter::write_heap()
 {
 	heap_sections_written_count =
-		heap_memory_total_heap_bytes = 
-		heap_memory_total_bytes_written = 
-		heap_memory_total_roots = 
+		heap_memory_total_heap_bytes =
+		heap_memory_total_bytes_written =
+		heap_memory_total_roots =
 		heap_memory_total_threads =
 		0;
 
