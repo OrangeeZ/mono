@@ -1,81 +1,14 @@
-sub CompileVCProj;
-use File::Spec;
+use Cwd;
+use Cwd 'abs_path';
+use Getopt::Long;
 use File::Basename;
-use File::Copy;
 use File::Path;
-my $root = File::Spec->rel2abs( dirname($0) . '/../..' );
 
-if ($ENV{UNITY_THISISABUILDMACHINE})
-{
-	print "rmtree-ing $root/builds because we're on a buildserver, and want to make sure we don't include old artifacts\n";
-	rmtree("$root/builds");
-} else {
-	print "not rmtree-ing $root/builds, as we're not on a buildmachine";
-}
+my $monoroot = File::Spec->rel2abs(dirname(__FILE__) . "/../..");
+my $monoroot = abs_path($monoroot);
+my $buildScriptsRoot = "$monoroot/external/buildscripts";
 
+# Note : Ideally we can switch back to this build approach once the random cygwin hangs on the build machines are sorted out
+#system("perl", "$buildScriptsRoot/build.pl", "--build=1", "--clean=1", "--test=1", "--artifact=1", "--classlibtests=0", "--forcedefaultbuilddeps=1") eq 0 or die ("Failed builidng mono\n");
 
-CompileVCProj("$root/msvc/mono.sln","Release_eglib|x64",0);
-my $remove = "$root/builds/embedruntimes/win64/libmono.bsc";
-if (-e $remove)
-{
-	unlink($remove) or die("can't delete libmono.bsc");
-}
-
-
-#have a duplicate for now...
-copy("$root/builds/embedruntimes/win64/mono.dll","$root/builds/monodistribution/bin-x64/mono.dll");
-copy("$root/builds/embedruntimes/win64/mono.pdb","$root/builds/monodistribution/bin-x64/mono.pdb");
-copy("$root/msvc/x64_Release_eglib/bin/MonoPosixHelper.dll","$root/builds/embedruntimes/win64/MonoPosixHelper.dll");
-
-if ($ENV{UNITY_THISISABUILDMACHINE})
-{
-	system("git log --pretty=format:\"mono-runtime-win64 = %H %d %ad\" --no-abbrev-commit --date=short -1 > $root\\builds\\versions.txt");
-}
-
-sub CompileVCProj
-{
-	my $sln = shift(@_);
-	my $slnconfig = shift(@_);
-	my $incremental = shift(@_);
-	my $projectname = shift(@_);
-	my @optional = @_;
-	
-	
-	my @devenvlocations = ($ENV{"PROGRAMFILES(X86)"}."/Microsoft Visual Studio 10.0/Common7/IDE/devenv.com",
-		       "$ENV{PROGRAMFILES}/Microsoft Visual Studio 10.0/Common7/IDE/devenv.com",
-		       "$ENV{REALVSPATH}/Common7/IDE/devenv.com");
-	
-	my $devenv;
-	foreach my $devenvoption (@devenvlocations)
-	{
-		if (-e $devenvoption) {
-			$devenv = $devenvoption;
-		}
-	}
-	
-	my $buildcmd = $incremental ? "/build" : "/rebuild";
-	
-        if (defined $projectname)
-        {
-            print "devenv.exe $sln $buildcmd $slnconfig /project $projectname @optional \n\n";
-            system($devenv, $sln, $buildcmd, $slnconfig, '/project', $projectname, @optional) eq 0
-                    or die("VisualStudio failed to build $sln");
-        } else {
-            print "devenv.exe $sln $buildcmd $slnconfig\n\n";
-            system($devenv, $sln, $buildcmd, $slnconfig) eq 0
-                    or die("VisualStudio failed to build $sln");
-        }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
+system("perl", "$buildScriptsRoot/build_win_no_cygwin.pl", "--build=1", "--clean=1", "--artifact=1", "--arch32=0", "--forcedefaultbuilddeps=1") eq 0 or die ("Failed builidng mono\n");

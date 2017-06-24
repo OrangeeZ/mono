@@ -56,3 +56,8 @@ libeglib_la-*.o
 /mono/tests/tests-config
 /scripts/lc
 /scripts/pdb2mdb
+/unity/smalltestcases/*
+*.tlog
+*Debug/
+*Release/
+*tmp/

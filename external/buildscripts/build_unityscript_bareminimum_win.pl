@@ -1,4 +1,4 @@
-use lib ('.', "perl_lib");
+use lib ('.', 'perl_lib', 'external/buildscripts/perl_lib');
 use Cwd;
 use File::Path;
 
@@ -46,8 +46,8 @@ my $output = Win32::GetLongPathName("$ENV{TEMP}") . "/output/BareMinimum";
 
 print("\nEnvironment Path: $ENV{PATH}\n");
 
-my $booCheckout = "$root/../../boo/build";
-my $usCheckout = "$root/../../unityscript/build";
+my $booCheckout = "$root/external/boo";
+my $usCheckout = "$root/external/unityscript";
 
 my $skipbuild=0;
 GetOptions(
