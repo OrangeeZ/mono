@@ -518,6 +518,10 @@ complete_path (const gunichar2 *appname, gchar **completed)
 	return TRUE;
 }
 
+#if TRUE // BOSSFIGHT: fuck this, I'm on Win7
+#define HAVE_GETPROCESSID
+#endif
+
 #ifndef HAVE_GETPROCESSID
 /* Run-time GetProcessId detection for Windows */
 #ifdef PLATFORM_WIN32

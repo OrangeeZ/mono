@@ -19,7 +19,8 @@
  * Windows SDK declares it unconditionally.
  * MinGW declares for Windows XP and later.
  * Declare as __GetProcessId for unsupported targets. */
-#define GetProcessId __GetProcessId
+// BOSSFIGHT: fuck this, I'm on Win7
+//#define GetProcessId __GetProcessId
 #endif
 #include <winsock2.h>
 #include <windows.h>
@@ -29,7 +30,8 @@
 #include <shlobj.h>
 #include <mswsock.h>
 #if (_WIN32_WINNT < 0x0502)
-#undef GetProcessId
+// BOSSFIGHT: fuck this, I'm on Win7
+//#undef GetProcessId
 #endif
 #ifndef HAVE_GETPROCESSID
 #ifdef _MSC_VER

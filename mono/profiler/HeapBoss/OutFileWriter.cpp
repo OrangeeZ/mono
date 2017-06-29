@@ -1,6 +1,4 @@
 
-#include <mono/profiler/HeapBoss/OutFileWriter.hpp>
-
 #include <string.h>
 #include <assert.h>
 
@@ -11,6 +9,7 @@ extern "C" {
 #include <unity/unity_utils.h>
 }
 
+#include <mono/profiler/HeapBoss/OutFileWriter.hpp>
 #include <mono/profiler/HeapBoss/OutFileWriterPriv.inl>
 #include <mono/profiler/HeapBoss/Accountant.hpp>
 #include <mono/profiler/HeapBoss/BackTrace.hpp>

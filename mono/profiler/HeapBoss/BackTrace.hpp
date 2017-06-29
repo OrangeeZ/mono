@@ -1,5 +1,11 @@
 #pragma once
 
+extern "C"
+{
+#include <glib.h>
+#include <mono/metadata/object.h>
+}
+
 #include <vector>
 #include <unordered_map>
 

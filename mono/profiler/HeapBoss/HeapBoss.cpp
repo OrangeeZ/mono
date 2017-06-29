@@ -1,7 +1,4 @@
 
-#include <mono/profiler/HeapBoss/HeapBoss.h>
-#include <mono/profiler/HeapBoss/Stacktrace.hpp>
-
 #ifdef PLATFORM_WIN32 // because fucking mono-mutex.h doesn't include this shit
 #include <windows.h>
 #endif
@@ -21,6 +18,8 @@ extern "C"
 
 #include <gc.h>
 _MonoThread* mono_thread_current();
+
+#include <unity/unity_utils.h>
 }
 
 #if PLATFORM_WIN32 // mkdir includes
@@ -29,6 +28,8 @@ _MonoThread* mono_thread_current();
 #include <sys/stat.h>
 #endif
 
+#include <mono/profiler/HeapBoss/HeapBoss.h>
+#include <mono/profiler/HeapBoss/Stacktrace.hpp>
 #include <mono/profiler/HeapBoss/Accountant.hpp>
 #include <mono/profiler/HeapBoss/BackTrace.hpp>
 #include <mono/profiler/HeapBoss/OutFileWriter.hpp>

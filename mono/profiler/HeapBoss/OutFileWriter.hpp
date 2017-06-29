@@ -4,6 +4,10 @@
 #include <Windows.h>
 #endif
 
+#include <glib.h>
+
+#include <cstdint>
+
 #define HEAP_BOSS_TRACK_INDIVIDUAL_OBJECTS 1
 
 struct Accountant;
