@@ -211,6 +211,12 @@ mono_unity_runtime_set_main_args (int argc, const char* argv[])
 {
 	mono_set_commandline_arguments (argc, argv, NULL);
 }
+// BOSSFIGHT:
+void (__cdecl* gGetStacktraceForBossFight)(char *trace, int maxSize, int maxFrames);
+void bossfight_mono_set_backtrace_callback(void* callback)
+{
+	gGetStacktraceForBossFight = callback;
+}
 
 MonoString*
 mono_unity_string_empty_wrapper ()
