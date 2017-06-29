@@ -1,5 +1,4 @@
 
-#include <mono/profiler/HeapBoss/BackTrace.hpp>
 
 #ifdef PLATFORM_WIN32 // because fucking mono-mutex.h doesn't include this shit
 #include <windows.h>
@@ -14,6 +13,7 @@ extern "C"
 #include <mono/io-layer/mono-mutex.h>
 }
 
+#include <mono/profiler/HeapBoss/BackTrace.hpp>
 #include <mono/profiler/HeapBoss/HeapBoss.h>
 
 BackTraceByClass::BackTraceByClass(_MonoClass* klass, const BackTrace* backtrace)

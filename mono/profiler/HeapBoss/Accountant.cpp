@@ -1,17 +1,14 @@
 
-#include <mono/profiler/HeapBoss/Accountant.hpp>
-
 extern "C"
 {
-extern gboolean mono_object_is_alive(MonoObject* obj);
-
-#include <glib.h>
+//#include <glib.h>
 #include <mono/metadata/class.h>
 #include <mono/metadata/object.h>
 #include <mono/metadata/mono-gc.h>
 #include <mono/metadata/debug-helpers.h>
 }
 
+#include <mono/profiler/HeapBoss/Accountant.hpp>
 #include <mono/profiler/HeapBoss/BackTrace.hpp>
 #include <mono/profiler/HeapBoss/OutFileWriter.hpp>
 

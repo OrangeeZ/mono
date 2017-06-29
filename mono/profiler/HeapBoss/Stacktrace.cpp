@@ -1,4 +1,8 @@
 #include <string>
+extern "C"
+{
+#include <glib.h>
+}
 
 #ifdef PLATFORM_WIN32
 #define _WS2DEF_

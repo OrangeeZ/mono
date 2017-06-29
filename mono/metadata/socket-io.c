@@ -78,7 +78,8 @@
 #endif
 
 #ifndef HAVE_INET_NTOP
-static char* inet_ntop(int af, const void* src, char* dst, size_t size);
+// BOSSFIGHT:
+//static char* inet_ntop(int af, const void* src, char* dst, size_t size);
 #endif
 
 #define LOGDEBUG(...)  
@@ -2995,6 +2996,7 @@ static int	inet_pton6(const char *src, u_char *dst);
 * author:
 *	Paul Vixie, 1996.
 */
+#if FALSE // BOSSFIGHT:
 static int
 inet_pton(int af, const char *src, void *dst)
 {
@@ -3008,6 +3010,7 @@ inet_pton(int af, const char *src, void *dst)
 	}
 	/* NOTREACHED */
 }
+#endif
 
 /* int
 * inet_pton4(src, dst)
@@ -3200,6 +3203,7 @@ static char	*inet_ntop6(const u_char *src, char *dst, socklen_t size);
 * author:
 *	Paul Vixie, 1996.
 */
+#if FALSE // BOSSFIGHT:
 static char *
 inet_ntop(int af, const void *src, char *dst, socklen_t size)
 {
@@ -3213,6 +3217,7 @@ inet_ntop(int af, const void *src, char *dst, socklen_t size)
 	}
 	/* NOTREACHED */
 }
+#endif
 
 /* const char *
 * inet_ntop4(src, dst, size)

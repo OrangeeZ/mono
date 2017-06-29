@@ -1,9 +1,18 @@
 #pragma once
 
+extern "C"
+{
+extern gboolean mono_object_is_alive(MonoObject* obj);
+
+#include <glib.h>
+#include <mono/metadata/object.h>
+}
+
+#include <cstdint>
+#include <list>
+
 struct _MonoClass;
 struct StackFrame;
-
-#include <list>
 
 struct OutfileWriter;
 struct BackTrace;

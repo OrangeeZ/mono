@@ -1,5 +1,10 @@
 #pragma once
 
+extern "C"
+{
+#include <glib.h>
+}
+
 #ifdef __cplusplus
 extern "C"
 #endif

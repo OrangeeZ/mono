@@ -580,6 +580,7 @@ void mono_unity_liveness_start_gc_world ()
 	GC_start_world_external ();
 }
 
+#if FALSE // BOSSFIGHT: disabling for 5.3 update
 void mono_unity_liveness_mark_classes_for_intptr_scanning (MonoClass* filter)
 {
 	filter->has_unity_native_intptr = 1;
@@ -590,6 +591,7 @@ gboolean mono_unity_liveness_has_parent_class (MonoObject* object, MonoClass* ba
 	MonoClass* object_klass = GET_VTABLE(object)->klass;
 	return mono_class_has_parent(object_klass, base_klass);
 }
+#endif
 
 LivenessState* mono_unity_liveness_calculation_begin (MonoClass* filter, guint max_count, register_object_callback callback, void* callback_userdata)
 {
