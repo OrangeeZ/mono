@@ -214,3 +214,10 @@ unity_mono_reflection_method_get_method(MonoReflectionMethod* mrf)
 
 	return mrf->method;
 }
+
+// BOSSFIGHT:
+void (__cdecl* gGetStacktraceForBossFight)(char *trace, int maxSize, int maxFrames);
+void bossfight_mono_set_backtrace_callback(void* callback)
+{
+	gGetStacktraceForBossFight = callback;
+}
