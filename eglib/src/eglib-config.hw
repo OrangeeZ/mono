@@ -5,6 +5,7 @@
  * System-dependent settings
  */
 #define G_OS_WIN32 1
+#define _XKEYCHECK_H
 
 #ifdef _MSC_VER
 
