@@ -47,6 +47,9 @@ static void write_byte(FILE *out, guint8 x)
 template<typename TUInt>
 static void write_vuint(FILE *out, TUInt x)
 {
+	fwrite(&x, sizeof(TUInt), 1, out);
+	return;
+
 	guint8 y;
 	
 	do {
