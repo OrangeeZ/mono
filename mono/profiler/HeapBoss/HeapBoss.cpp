@@ -117,8 +117,8 @@ static MonoProfiler* create_mono_profiler(
 
 	g_heap_boss_profiler = p;
 
-	GC_on_malloc_callback = heap_boss_gc_boehm_alloc;
-	GC_on_free_callback = heap_boss_gc_boehm_free;
+	//GC_on_malloc_callback = heap_boss_gc_boehm_alloc;
+	//GC_on_free_callback = heap_boss_gc_boehm_free;
 
 	return p;
 }
@@ -373,7 +373,7 @@ static void heap_boss_gc_boehm_dump_end(MonoProfiler* p)
 	{
 		p->outfile_writer->write_heap_end();
 
-		p->should_dump_next_heap = false;
+		//p->should_dump_next_heap = false;
 	}
 	mono_mutex_unlock(&p->lock);
 }
@@ -561,13 +561,17 @@ void heap_boss_startup(const char* desc)
 
 	// HACK: hard code this to true if we're not installing before mini_init finishes
 	p->runtime_is_ready = true;
+	p->gc_heap_dumping_enabled = true;
+	p->should_dump_next_heap = true;
+
 	mono_profiler_install_runtime_initialized(heap_boss_profiler_runtime_initialized);
 
 	mono_profiler_install_allocation(heap_boss_alloc_func);
 
 	mono_profiler_install_gc(heap_boss_gc_func, heap_boss_gc_resize_func);
 
-	mono_profiler_install_gc_boehm(heap_boss_gc_boehm_fixed_alloc, heap_boss_gc_boehm_fixed_free);
+//	mono_profiler_install_gc_boehm(heap_boss_gc_boehm_fixed_alloc, heap_boss_gc_boehm_fixed_free);
+
 	mono_profiler_install_gc_boehm_dump(heap_boss_gc_boehm_dump_begin, heap_boss_gc_boehm_dump_end,
 		heap_boss_gc_boehm_dump_heap_section, heap_boss_gc_boehm_dump_heap_section_block, 
 		heap_boss_gc_boehm_dump_root_set, heap_boss_gc_boehm_dump_thread_stack);
@@ -606,21 +610,21 @@ void heap_boss_handle_custom_event(const char* text)
 
 	//printf("boss custom event: %s\n\n", text);
 
-	bool gc_heap_dumping_enabled = 0 == strcmp(text, "tap_to_play_shown");
+	//bool gc_heap_dumping_enabled = 0 == strcmp(text, "tap_to_play_shown");
 
 	mono_mutex_lock(&g_heap_boss_profiler->lock);
-	if (!g_heap_boss_profiler->gc_heap_dumping_enabled)
-	{
-		g_heap_boss_profiler->gc_heap_dumping_enabled = gc_heap_dumping_enabled;
-		g_heap_boss_profiler->should_dump_next_heap = true;
-	}
-	else
-	{
-		g_heap_boss_profiler->should_dump_next_heap = 
-			true // this will force it to only dump the heap after a custom event is signaled
-			//0==strcmp(text, "")
-			;
-	}
+	//if (!g_heap_boss_profiler->gc_heap_dumping_enabled)
+	//{
+	//	g_heap_boss_profiler->gc_heap_dumping_enabled = gc_heap_dumping_enabled;
+	//	g_heap_boss_profiler->should_dump_next_heap = true;
+	//}
+	//else
+	//{
+	//	g_heap_boss_profiler->should_dump_next_heap = 
+	//		true // this will force it to only dump the heap after a custom event is signaled
+	//		//0==strcmp(text, "")
+	//		;
+	//}
 
 	g_heap_boss_profiler->outfile_writer->write_custom_event(text);
 	mono_mutex_unlock(&g_heap_boss_profiler->lock);

@@ -550,6 +550,8 @@ void OutfileWriter::write_heap_section_end()
 	write_uint32(this->out, heap_section_blocks_written_count);
 
 	fsetpos(this->out, &old_fpos);
+
+	heap_sections_written_count++;
 }
 
 void OutfileWriter::write_heap_section_block(const void* start, size_t block_size, size_t obj_size, uint8_t block_kind, bool is_free)
@@ -587,12 +589,19 @@ void OutfileWriter::write_heap_root_set(const void* start, const void* end)
 	write_pointer(this->out, end);
 
 	size_t size = static_cast<size_t>((char*)end - (char*)start);
+	
 	if (size > 0)
 	{
 		if (size & 1) // fucking libgc requires +1 in the register static roots...
 			size -= 1;
 
+		write_vuint(this->out, size);
+
 		fwrite(start, sizeof(char), size, this->out);
+	}
+	else 
+	{
+		write_vuint(this->out, size);
 	}
 
 	heap_memory_total_roots++;

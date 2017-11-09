@@ -106,7 +106,7 @@ static gboolean stack_walk_check_for_collision_fn(
 
 struct HashAndCountInfo
 {
-	gint32 hash;
+	gint64 hash;
 	guint32 count;
 };
 
@@ -163,7 +163,9 @@ static void backtrace_cache_value_destroy(gpointer data)
 
 	delete backtrace;
 }
-static GHashTable* backtrace_cache = NULL;
+//static GHashTable* backtrace_cache = NULL;
+static std::unordered_map<guint64, BackTrace*>* backtrace_cache;
+static GHashTable* backtrace_by_class_cache = NULL;
 static mono_mutex_t backtrace_cache_lock /*= MONO_MUTEX_INITIALIZER*/;
 
 void backtrace_cache_initialize()
@@ -173,8 +175,12 @@ void backtrace_cache_initialize()
 
 void backtrace_cache_dispose()
 {
-	g_hash_table_destroy(backtrace_cache);
-	backtrace_cache = NULL;
+	if (backtrace_cache != NULL)
+	{
+		backtrace_cache->clear();
+	}
+	//g_hash_table_destroy(backtrace_cache);
+	//backtrace_cache = NULL;
 	mono_mutex_destroy(&backtrace_cache_lock);
 }
 
@@ -190,7 +196,10 @@ backtrace_get_current(MonoObject* obj, MonoClass* klass)
 	mono_mutex_lock(&backtrace_cache_lock);
 
 	if (backtrace_cache == NULL)
-		backtrace_cache = g_hash_table_new_full(NULL, NULL, NULL, backtrace_cache_value_destroy);
+	{
+		backtrace_cache = new std::unordered_map<guint64, BackTrace*>();
+	}
+	//	backtrace_cache = g_hash_table_new_full(NULL, NULL, NULL, backtrace_cache_value_destroy);
 
 	mono_mutex_unlock(&backtrace_cache_lock);
 
@@ -201,15 +210,22 @@ backtrace_get_current(MonoObject* obj, MonoClass* klass)
 	else
 		backtrace_misses++;
 
-
 	mono_mutex_lock(&backtrace_cache_lock);
-	auto* backtrace = reinterpret_cast<BackTrace*>(g_hash_table_lookup(backtrace_cache, GUINT_TO_POINTER(hc_info.hash)));
+	//auto* backtrace = reinterpret_cast<BackTrace*>(g_hash_table_lookup(backtrace_cache, GUINT_TO_POINTER(hc_info.hash)));
+	auto backtrace_itr = backtrace_cache->find(hc_info.hash);
+	BackTrace* backtrace = NULL;
+
+	if (backtrace_itr != backtrace_cache->end())
+	{
+		backtrace = backtrace_itr->second;
+	}
 
 	mono_mutex_unlock(&backtrace_cache_lock);
 
 	if (backtrace != NULL)
 	{
 		BackTraceByClass* klass_backtrace = backtrace->get_or_add_class(klass);
+
 #if _DEBUG
 		if (safe_to_get_backtrace)
 		{
@@ -223,6 +239,8 @@ backtrace_get_current(MonoObject* obj, MonoClass* klass)
 
 				MonoType* type = mono_class_get_type(klass);
 				char* type_name = mono_type_full_name(type);
+
+				MessageBoxA(NULL, type_name, "Backtrace hash collision!!", MB_OK);
 
 				DebugBreak();
 				g_free(type_name);
@@ -254,7 +272,10 @@ backtrace_get_current(MonoObject* obj, MonoClass* klass)
 	backtrace->frames.shrink_to_fit();
 
 	mono_mutex_lock(&backtrace_cache_lock);
-	g_hash_table_insert(backtrace_cache, GUINT_TO_POINTER(hc_info.hash), backtrace);
+	
+	backtrace_cache->insert(std::make_pair(hc_info.hash, backtrace));
+
+	//g_hash_table_insert(backtrace_cache, GUINT_TO_POINTER(hc_info.hash), backtrace);
 	BackTraceByClass* klass_backtrace = backtrace->get_or_add_class(klass);
 	mono_mutex_unlock(&backtrace_cache_lock);
 
