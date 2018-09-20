@@ -28,7 +28,7 @@ typedef enum {
 	MONO_PROFILE_MONITOR_EVENTS   = 1 << 17,
 	MONO_PROFILE_IOMAP_EVENTS = 1 << 18, /* this should likely be removed, too */
 	MONO_PROFILE_GC_MOVES = 1 << 19,
-	MONO_PROFILE_FILEIO = 1 << 23
+	MONO_PROFILE_FILEIO = 1 << 23,
 
 	// BOSSFIGHT
 	MONO_PROFILER_GC_BOEHM_EVENTS = 1 << 20,

@@ -83,7 +83,7 @@ int GC_thread_is_registered (void)
   LONG my_max;
 
   LOCK ();
-  my_max = GC_get_max_thread_index ();
+  my_max = GC_max_thread_index;// GC_get_max_thread_index();
   for (i = 0;
        i <= my_max &&
        (!thread_table[i].in_use || thread_table[i].id != thread_id);
@@ -418,7 +418,7 @@ void GC_thread_stacks_foreach(GC_PTR user_data, GC_thread_stacks_proc callback)
 	for (i = 0; i <= last_thread_index; i++)
 	{
 		thread = thread_table + i;
-		if (thread->in_use && thread->should_scan && thread->stack_base)
+		if (thread->in_use && /*thread->should_scan &&*/ thread->stack_base)
 		{
 			if (thread->id == thread_id)
 			{

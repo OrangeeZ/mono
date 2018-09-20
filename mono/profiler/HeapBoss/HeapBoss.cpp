@@ -588,7 +588,7 @@ void heap_boss_startup(const char* desc)
 	mono_profiler_set_events(profile_flags);
 
 	// route around Unity's bullshit https://twitter.com/KornnerStudios/status/574729839250272257
-	mono_profiler_install(NULL, NULL);
+	//mono_profiler_install(NULL, NULL);
 
 	printf("*** Running with heap-boss ***\n");
 }
