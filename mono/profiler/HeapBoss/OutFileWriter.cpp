@@ -135,7 +135,7 @@ static void write_mono_class(
 	write_vuint(file, static_cast<guint32>(min_alignment));
 }
 
-static guint32 g_backtrace_frame_debug_lines[512];
+static guint32 g_backtrace_frame_debug_lines[256];
 static size_t write_backtrace_methods(
 	FILE* file,
 	GHashTable* seen_methods,
@@ -145,11 +145,14 @@ static size_t write_backtrace_methods(
 	size_t frame_count = 0;
 	MonoDomain* domain = mono_domain_get();
 	size_t i = 0, null_count = 0;
+	size_t max_frame_count = _countof(g_backtrace_frame_debug_lines);
+
 	for (auto iter = backtrace->frames.begin(), end = backtrace->frames.end();
-		iter != end;
+		iter != end && i < max_frame_count;
 		++iter, i++, frame_count++)
 	{
-		g_assert(i < _countof(g_backtrace_frame_debug_lines));
+		//g_assert(i < _countof(g_backtrace_frame_debug_lines));
+
 		auto& frame = *iter;
 		if (frame.method == NULL)
 		{
@@ -183,6 +186,11 @@ static size_t write_backtrace_methods(
 			: 0;
 
 		mono_debug_free_source_location(debug_loc);
+
+		if (i + 1 == _countof(g_backtrace_frame_debug_lines))
+		{
+			break;
+		}
 	}
 
 	//g_assert(null_count <= 1);
@@ -208,7 +216,7 @@ static void write_backtrace(
 	MonoDomain* domain = mono_domain_get();
 	size_t i = 0;
 	for (auto iter = acct->backtrace->owner->frames.begin(), end = acct->backtrace->owner->frames.end();
-		iter != end;
+		iter != end && i < frame_count;
 		++iter, i++)
 	{
 		auto& frame = *iter;
