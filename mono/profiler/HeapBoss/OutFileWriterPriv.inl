@@ -113,7 +113,7 @@ static void write_time_offset(FILE *out, uint64_t x)
 
 static void write_string(FILE *out, const char *str)
 {
-	size_t len = strlen(str);
+	size_t len = static_cast<uint32_t>(strlen(str));
 	write_vuint(out, len);
 	fwrite(str, sizeof (char), len, out);
 }
