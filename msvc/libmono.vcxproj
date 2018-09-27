@@ -499,6 +499,7 @@
       <CompileAs>CompileAsC</CompileAs>
       <OmitFramePointers>false</OmitFramePointers>
       <PreprocessToFile>false</PreprocessToFile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
